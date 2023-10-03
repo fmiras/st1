@@ -21,6 +21,20 @@ class Player {
 
   constructor(public name: string) {}
 
+  public playCard(lastCard: Card | null = null) {
+    const card = this.hand.find((card) => card.greaterThan(lastCard))
+    if (card) {
+      return this.hand.splice(this.hand.indexOf(card!), 1)[0]
+    }
+
+    return this.shiftRandomCard()
+  }
+
+  private shiftRandomCard() {
+    const index = Math.floor(Math.random() * this.hand.length)
+    return this.hand.splice(index, 1)[0]
+  }
+
   public sortHand() {
     this.hand = this.hand.sort((a, b) => {
       if (a.greaterThan(b)) {
@@ -85,7 +99,7 @@ class Game {
 
     while (!this.isFinished()) {
       const player = this.players[this.turn % this.players.length]
-      const card = player.hand.pop()!
+      const card = player.playCard()
       console.log(`${player.name} plays ${card!.rank}${card!.suit}`)
 
       if (winnerCard === null || card.greaterThan(winnerCard)) {
@@ -104,7 +118,7 @@ class Game {
   }
 
   private isFinished() {
-    return this.players.some((player) => player.hand.length === 0)
+    return this.players.every((player) => player.hand.length === 0)
   }
 
   private trickFinished() {
@@ -112,5 +126,10 @@ class Game {
   }
 }
 
-const game = new Game([new Player('Fefo'), new Player('Siri')])
+const game = new Game([
+  new Player('Fefo'),
+  new Player('Siri'),
+  new Player('Mati'),
+  new Player('Nico')
+])
 game.play()
