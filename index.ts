@@ -99,7 +99,7 @@ class Game {
 
     while (!this.isFinished()) {
       const player = this.players[this.turn % this.players.length]
-      const card = player.playCard()
+      const card = player.playCard(winnerCard)
       console.log(`${player.name} plays ${card!.rank}${card!.suit}`)
 
       if (winnerCard === null || card.greaterThan(winnerCard)) {
